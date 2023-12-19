@@ -1,0 +1,26 @@
+- name: Remove symbolic link for default site in sites-enabled
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Deploy Nginx configuration for Flask app
+  template:
+    src: "{{ nginx_config_template }}"
+    dest: "/etc/nginx/sites-available/{{ nginx_config_filename }}"
+
+- name: Enable Nginx site configuration
+  ansible.builtin.file:
+    src: "/etc/nginx/sites-available/{{ nginx_config_filename }}"
+    dest: "/etc/nginx/sites-enabled/{{ nginx_config_filename }}"
+    state: link
+
+- name: Test Nginx configuration
+  command: nginx -t
+  register: nginx_test
+  changed_when: "'syntax is ok' not in nginx_test.stdout"
+
+- name: Reload Nginx to apply new configuration
+  systemd:
+    name: nginx
+    state: reloaded
+  when: nginx_test is defined and nginx_test.rc == 0

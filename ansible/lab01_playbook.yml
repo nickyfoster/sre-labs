@@ -1,0 +1,29 @@
+---
+- name: Configure EC2 instance for training
+  hosts: "{{ target }}"
+  become: yes
+  tasks:
+    - name: Install packages
+      ansible.builtin.include_tasks: tasks/lab01/install_packages_task.yml
+      tags:
+        - packages
+        
+    - name: Attach EBS
+      ansible.builtin.include_tasks: tasks/lab01/attach_ebs_task.yml
+      tags:
+        - ebs
+
+    - name: Configure python app
+      ansible.builtin.include_tasks: tasks/lab01/configure_python_app_task.yml
+      tags:
+        - app
+
+    - name: Configure nginx
+      ansible.builtin.include_tasks: tasks/lab01/configure_nginx_task.yml
+      tags:
+        - nginx
+
+    - name: Copy bug app
+      ansible.builtin.include_tasks: tasks/lab01/copy_bug_app_task.yml
+      tags:
+        - bug

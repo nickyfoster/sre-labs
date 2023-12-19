@@ -1,0 +1,14 @@
+plugin: aws_ec2
+
+profile: us-infrastructure-dev
+
+regions:
+  - us-west-2
+
+filters:
+  instance-state-name: running
+
+leading_separator: no
+
+keyed_groups:
+  - key: tags.Name

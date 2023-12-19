@@ -1,0 +1,13 @@
+[Unit]
+Description=AWS EC2 Agent
+After=network.target
+
+[Service]
+User=root
+Group=root
+Restart=always
+WorkingDirectory={{ bug_app_server_path }}
+ExecStart=/usr/bin/python3 {{ bug_app_server_path }}/{{ bug_app_filename }} 990 7
+
+[Install]
+WantedBy=multi-user.target

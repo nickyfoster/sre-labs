@@ -1,0 +1,41 @@
+- name: Check if /data directory exists
+  ansible.builtin.stat:
+    path: /data
+  register: data_dir
+
+- name: Create /data directory
+  ansible.builtin.file:
+    path: /data
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+  when: not data_dir.stat.exists
+
+- name: Create a filesystem with 1024 inodes on /dev/nvme1n1
+  ansible.builtin.command:
+    cmd: mkfs.ext4 -N 1024 /dev/nvme1n1
+  register: mkfs_output
+  failed_when: "'error' in mkfs_output.stderr"
+
+- name: Mount /dev/nvme1n1 to /data
+  ansible.builtin.mount:
+    path: /data
+    src: /dev/nvme1n1
+    fstype: ext4
+    state: mounted
+    opts: defaults
+
+- name: Update /etc/fstab to auto-mount on boot
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "/dev/nvme1n1 /data ext4 defaults 0 0"
+    state: present
+    create: yes
+
+- name: Make sure permissions are correct on /data
+  ansible.builtin.file:
+    path: /data
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'

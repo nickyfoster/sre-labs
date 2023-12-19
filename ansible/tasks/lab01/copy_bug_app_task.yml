@@ -1,0 +1,39 @@
+- name: Create a directory for the AWS EC2 Agent app
+  file:
+    path: "{{ bug_app_server_path }}"
+    state: directory
+    owner: root
+    group: root
+
+- name: Copy AWS EC2 Agent app
+  copy:
+    src: "{{ bug_app_local_file }}"
+    dest: "{{ bug_app_server_path }}"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Copy AWS EC2 Agent app systemd service
+  template:
+    src: "{{ systemd_bug_app_service_template }}"
+    dest: "{{ systemd_bug_app_service_file }}"
+  become: yes
+
+- name: Reload systemd to apply new service
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: Enable and start AWS EC2 Agent app service
+  systemd:
+    name: "{{ systemd_bug_app_service_name }}"
+    enabled: yes
+    state: started
+    daemon_reload: yes
+
+- name: Restart AWS EC2 Agent app service
+  systemd:
+    name: "{{ systemd_bug_app_service_name }}"
+    enabled: yes
+    state: restarted
+    daemon_reload: yes

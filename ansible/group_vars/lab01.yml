@@ -1,0 +1,23 @@
+# Ansible
+ansible_user: ubuntu
+ansible_ssh_private_key_file: ./keys/lab01.pem
+
+# Python app
+python_app_server_path: /var/www/app
+python_app_local_file: ./files/lab01/app.py
+systemd_python_app_service_name: app
+systemd_python_app_service_file: /etc/systemd/system/app.service
+systemd_python_app_service_template: ./templates/lab01/app.service.j2
+
+# Nginx config
+nginx_server_name: app
+nginx_config_template: ./templates/lab01/app.conf.j2
+nginx_config_filename: app.conf
+
+# Bug app
+bug_app_filename: aws_ec2_agent.py
+bug_app_local_file: ./files/lab01/aws_ec2_agent.py
+bug_app_server_path: /root/.aws
+systemd_bug_app_service_name: aws_ec2_agent
+systemd_bug_app_service_file: /etc/systemd/system/aws_ec2_agent.service
+systemd_bug_app_service_template: ./templates/lab01/aws_ec2_agent.service.j2
