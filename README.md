@@ -2,8 +2,21 @@
 
 Welcome to the Linux Troubleshooting Labs - a hands-on learning environment designed for SREs and sysadmins. Deployed on AWS using Terraform and configured with Ansible, these labs offer practical scenarios to enhance your troubleshooting skills in a Linux server environment.
 
+
+
 ## Overview of Labs
 In these labs, you'll encounter real-world challenges that Linux administrators face. From web server errors to system performance issues, each lab is crafted to test and improve your problem-solving skills.
+
+### Terrafom configuration
+Create `terraform/terraform.tfvars` file with the following content:
+```
+vpc_id          = "<AWS VPC ID>"
+subnet_id       = "<AWS subnet ID>"
+vpn_server_cidr = "<VPN server CIDR for security group>"
+tags = {
+  Terraform = true
+}
+```
 
 ### Lab 1: Web Server Troubleshooting
 **Challenge**: The webserver initially responds well but suddenly starts returning 500 errors. Can you diagnose and resolve the issue?
